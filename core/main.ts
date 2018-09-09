@@ -1,3 +1,6 @@
+/// <reference path="./gl.ts"/>
+/// <reference path="./logging.ts"/>
+
 namespace WS
 {
     export class Engine
@@ -7,14 +10,19 @@ namespace WS
 
         }
 
-        public initialise()
+        public initialise(canvasId?:string)
         {
-            Utils.createCanvas();
+            Utils.createCanvas(canvasId);
+
+            glContext.clearColor(0, 0, 0, 1);
+
             requestAnimationFrame(this.update.bind(this));
         }
 
         private update()
         {
+            glContext.clear(glContext.COLOR_BUFFER_BIT);
+
             requestAnimationFrame(this.update.bind(this));
         }
     }
@@ -22,8 +30,8 @@ namespace WS
 
 window.onload = () => 
 {
-    console.log("CREATING ENGINE");
+    WS.Log.info("CREATING ENGINE");
     const engine = new WS.Engine();
     engine.initialise();
-    console.log("ENGINE CREATED");
+    WS.Log.info("ENGINE CREATED");
 }

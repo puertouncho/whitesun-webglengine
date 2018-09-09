@@ -1,13 +1,23 @@
 namespace WS
 {
-    var glContext: WebGLRenderingContext|CanvasRenderingContext2D;
+    export var glContext: WebGLRenderingContext|any;
 
     export class Utils
     {
-        public static createCanvas()
+        /**
+         * Create the canvas element and saves the gl context
+         * @param canvasId 
+         */
+        public static createCanvas(canvasId?: string)
         {
-            const canvas: HTMLCanvasElement = document.createElement("canvas");
-            canvas.id = "game-canvas";
+            const alreadyExist = document.getElementById(canvasId);
+            if (alreadyExist && alreadyExist.nodeName !== "canvas")
+            {
+                throw "Already exist a non canvas element with the id: " + canvasId;
+            }
+
+            const canvas: HTMLCanvasElement = alreadyExist? alreadyExist as HTMLCanvasElement : document.createElement("canvas");
+            canvas.id = canvasId? canvasId : "whitesun-game-canvas";
 
             glContext = canvas.getContext("webgl2");
             if (!glContext)
@@ -15,17 +25,18 @@ namespace WS
                 glContext = canvas.getContext("webgl");
                 if (!glContext)
                 {
-                    console.log("%c NO WEBGL AVAILABLE", "color: #bada55");
+                    WS.Log.error("NO WEBGL AVAILABLE");
                 }
                 else
                 {
-                    console.log("%c WEBGL", "color: #bada55");
+                    WS.Log.success("White Sun Engine - WEBGL");
                 }
             }
             else
             {
-                console.log("%c WEBGL2", "color: #bada55");
+                WS.Log.success("White Sun Engine - WEBGL2");
             }
+            document.body.appendChild(canvas)
         }
     }
 }
